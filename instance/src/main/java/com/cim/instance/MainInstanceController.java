@@ -22,16 +22,16 @@ public class MainInstanceController extends RouteBuilder {
 		.post("/startinstances")
 		.produces("application/json")
 		.consumes("application/json")
-		.to("direct:startEC2");
+		.to("direct:startinstances");
 
 
 		from("direct:startinstances")
 		.choice()
-			.when(header("provider").isEqualTo("aws")) .to("undertow:http://0.0.0.0:9377/camel/startec2")
-		.end()
-		.log("aws stopped");
-		
-		
+		.when(header("provider").isEqualTo("aws")) .to("direct:startEC2")
+		.when(header("provider").isEqualTo("azure")) .to("direct:startResources")
+		.end();
+
+
 
 	}
 

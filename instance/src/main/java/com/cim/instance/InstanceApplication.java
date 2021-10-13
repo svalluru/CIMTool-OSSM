@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages="aws,com.cim.instance")
+@ComponentScan(basePackages="aws,azure,com.cim.instance")
 public class InstanceApplication {
 
 	public static void main(String[] args) {

@@ -35,17 +35,6 @@ public class StartStopEC2Instances extends RouteBuilder {
 	@Override
 	public void configure() {
 
-		restConfiguration().component("undertow")
-		.bindingMode(RestBindingMode.auto)
-		.port(9377)
-	    .contextPath("/im");
-
-		
-		rest()
-		.get("/startec2")
-		.produces("application/json")
-		.to("direct:startEC2");
-
 		from("direct:startEC2")
 		//from("timer:timerName?period=1s")
 		.setHeader(EC2Constants.INSTANCES_IDS,method(EC2Client.class, "getMasterIds()"))
@@ -56,17 +45,6 @@ public class StartStopEC2Instances extends RouteBuilder {
 		.to("aws-ec2:startEC2?operation=startInstances&amazonEc2Client=#ec2Client")
 		.log("${body}")
 		;
-
-
-		from("direct:startEC")
-		//from("timer:timerName?period=1s")
-		.setHeader(EC2Constants.INSTANCES_IDS,method(EC2Client.class, "getWorkerIds()"))
-		.to("aws-ec2:stopEC2?operation=stopInstances&amazonEc2Client=#ec2Client")
-		.log("${body}")
-		.delay(delay)
-		.setHeader(EC2Constants.INSTANCES_IDS,method(EC2Client.class, "getMasterIds()"))
-		.to("aws-ec2:stopEC2?operation=stopInstances&amazonEc2Client=#ec2Client")
-		.log("${body}");
 
 
 
