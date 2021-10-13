@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
 public class InstanceController {
@@ -14,6 +15,12 @@ public class InstanceController {
 	public String startInstances(@RequestBody InstanceDetails instDetails, HttpServletResponse response,@RequestHeader String provider) {
 		
 		if("aws".equalsIgnoreCase(provider)) {
+			WebClient webClient2 = WebClient.create("http://0.0.0.0:9377/camel");
+			webClient2.get()
+			.uri("/startec2")
+			.retrieve()
+	        .bodyToFlux(String.class);
+			
 			
 		} else if ("azure".equalsIgnoreCase(provider)) {
 			

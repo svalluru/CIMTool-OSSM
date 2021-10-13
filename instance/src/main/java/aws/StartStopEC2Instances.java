@@ -18,6 +18,7 @@ package aws;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.aws.ec2.EC2Constants;
+import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,18 @@ public class StartStopEC2Instances extends RouteBuilder {
 	@Override
 	public void configure() {
 
-		from("quartz2:startgroup/startEC2?cron="+startTime).noAutoStartup()
+		restConfiguration().component("undertow")
+		.bindingMode(RestBindingMode.auto)
+		.port(9377)
+	    .contextPath("/im");
+
+		
+		rest()
+		.get("/startec2")
+		.produces("application/json")
+		.to("direct:startEC2");
+
+		from("direct:startEC2")
 		//from("timer:timerName?period=1s")
 		.setHeader(EC2Constants.INSTANCES_IDS,method(EC2Client.class, "getMasterIds()"))
 		.to("aws-ec2:startEC2?operation=startInstances&amazonEc2Client=#ec2Client")
@@ -46,7 +58,7 @@ public class StartStopEC2Instances extends RouteBuilder {
 		;
 
 
-		from("quartz2:stopgroup/stopEC2?cron="+stopTime)
+		from("direct:startEC")
 		//from("timer:timerName?period=1s")
 		.setHeader(EC2Constants.INSTANCES_IDS,method(EC2Client.class, "getWorkerIds()"))
 		.to("aws-ec2:stopEC2?operation=stopInstances&amazonEc2Client=#ec2Client")
