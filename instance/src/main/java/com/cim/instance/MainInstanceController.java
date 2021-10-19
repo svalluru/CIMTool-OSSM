@@ -27,8 +27,8 @@ public class MainInstanceController extends RouteBuilder {
 
 		from("direct:startinstances")
 		.choice()
-		.when(header("provider").isEqualTo("aws")) .to("direct:startEC2")
-		.when(header("provider").isEqualTo("azure")) .to("direct:startResources")
+			.when(header("provider").isEqualTo("aws")) .to("direct:startEC2")
+			.when(header("provider").isEqualTo("azure")) .to("direct:startResources")
 		.end();
 
 
