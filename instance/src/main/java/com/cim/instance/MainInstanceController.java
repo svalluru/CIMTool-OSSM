@@ -14,7 +14,7 @@ public class MainInstanceController extends RouteBuilder {
 
 		restConfiguration().component("undertow")
 		.bindingMode(RestBindingMode.auto)
-		.port(9377)
+		.port(8080)
 		.contextPath("/im");
 
 
