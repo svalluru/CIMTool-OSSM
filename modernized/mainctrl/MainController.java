@@ -13,7 +13,7 @@ public class MainController extends RouteBuilder {
     .log("Starting instances")
     .choice()
       .when(header("provider").isEqualTo("aws")) .to("http://aws-instances?bridgeEndpoint=true")
-      .when(header("provider").isEqualTo("azure")) .to("direct:startResources")
+      .when(header("provider").isEqualTo("azure")) .to("http://azure-instances?bridgeEndpoint=true")
     .end()
     .setBody(simple("{\"Order\":\"Placed Service A\"}"));
 
